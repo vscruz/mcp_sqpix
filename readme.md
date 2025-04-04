@@ -53,7 +53,7 @@ make build
 Ou diretamente:
 
 ```bash
-go build -o bin/sq_pix_esptag.exe cmd/esptag/main.go
+go build -o bin/sq_pix_esptag.exe cmd/mcp/main.go
 ```
 
 O executável será gerado em `bin/sq_pix_esptag.exe`.
@@ -110,14 +110,14 @@ make run
 Ou diretamente:
 
 ```bash
-go run cmd/esptag/main.go -server 10.110.104.4 -user sa -password P@ssw0rd -database DSV_PIX
+go run cmd/mcp/main.go -server 10.110.104.4 -user sa -password P@ssw0rd -database DSV_PIX
 ```
 
 Você pode usar o MCP Inspector para interagir com o servidor em execução:
 
 ```bash
 # Exemplo assumindo que o servidor está rodando e escutando em stdio
-npx @modelcontextprotocol/inspector stdio --cmd "go run cmd/esptag/main.go -server <server> -user <user> -password <pass> -database <db>"
+npx @modelcontextprotocol/inspector stdio --cmd "go run cmd/mcp/main.go -server <server> -user <user> -password <pass> -database <db>"
 ```
 
 ---
