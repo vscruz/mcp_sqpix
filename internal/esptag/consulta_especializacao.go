@@ -11,6 +11,26 @@ type EspecializacaoTag struct {
 	Descricao string `json:"dsc_esp_tag"`
 }
 
+// ConsultaEspecializacaoPorID retorna uma especialização específica pelo seu ID
+func ConsultaEspecializacaoPorID(db *sql.DB, id int) (*EspecializacaoTag, error) {
+	query := `
+		SELECT id_esp_tag, dsc_esp_tag 
+		FROM spi_especializacao_tag 
+		WHERE id_esp_tag = ?
+	`
+
+	var esp EspecializacaoTag
+	err := db.QueryRow(query, id).Scan(&esp.ID, &esp.Descricao)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil // Retorna nil se não encontrar
+		}
+		return nil, fmt.Errorf("erro ao consultar especialização por ID: %v", err)
+	}
+
+	return &esp, nil
+}
+
 // ConsultaEspecializacao retorna uma lista de especializações que correspondem ao termo de busca
 func ConsultaEspecializacao(db *sql.DB, termo string) ([]EspecializacaoTag, error) {
 	// Consulta especializações usando LIKE para busca parcial
