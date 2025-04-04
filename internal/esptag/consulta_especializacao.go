@@ -17,7 +17,7 @@ func ConsultaEspecializacao(db *sql.DB, termo string) ([]EspecializacaoTag, erro
 	query := `
 		SELECT id_esp_tag, dsc_esp_tag 
 		FROM spi_especializacao_tag 
-		WHERE dsc_esp_tag LIKE @p1
+		WHERE dsc_esp_tag LIKE ?
 		ORDER BY dsc_esp_tag
 	`
 
