@@ -69,6 +69,10 @@ func main() {
 		log.Fatalf("Erro ao registrar MCP de geração de script de vinculação: %v", err)
 	}
 
+	if err := esptag.RegisterConsultaDadosMensagem(server, db); err != nil {
+		log.Fatalf("Erro ao registrar MCP de consulta de dados da mensagem: %v", err)
+	}
+
 	// Inicia o servidor
 	log.Println("Iniciando servidor MCP para Especialização de Tags...")
 	if err := server.Serve(); err != nil {
