@@ -1,0 +1,14 @@
+{
+  "servers": {
+    "sqpix": {
+      "type": "stdio",
+      "command": "F:\\src\\sinqia\\sqpix\\mcp\\sq_pix\\bin\\sqpix.exe",
+      "args": [
+        "-server", "10.110.104.4",
+        "-user", "sa",
+        "-database", "DSV_PIX"
+      ],
+      "env": {}
+    }
+  }
+}
