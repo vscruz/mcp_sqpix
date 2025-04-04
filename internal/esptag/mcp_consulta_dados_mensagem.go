@@ -6,6 +6,8 @@ import (
 	"log"
 	"strings"
 
+	"sq_pix/internal/esptag/util"
+
 	mcp_golang "github.com/metoro-io/mcp-golang"
 )
 
@@ -28,14 +30,14 @@ func RegisterConsultaDadosMensagem(server *mcp_golang.Server, db *sql.DB) error 
 			}
 
 			// --- Step 1: Parse XML correctly to find true parent and subpath ---
-			tagPaiCorreta, subcaminhoXML, parseErr := findTagParentAndPath(args.CaminhoXML, args.NomeTag)
+			tagPaiCorreta, subcaminhoXML, parseErr := util.FindTagParentAndPath(args.CaminhoXML, args.NomeTag)
 			if parseErr != nil {
 				// Return parsing error to the user
 				return mcp_golang.NewToolResponse(mcp_golang.NewTextContent(fmt.Sprintf("Erro ao processar XML: %v", parseErr))), nil
 			}
 
 			// --- Step 2: Get flat path (for BuscarTagNaBase signature - legacy) ---
-			caminhoPlano := ExtrairCaminhoTags(args.CaminhoXML)
+			caminhoPlano := util.ExtrairCaminhoTags(args.CaminhoXML)
 
 			// --- Step 3: Query Database (without parent filter initially) ---
 			resultados, err := BuscarTagNaBase(db, caminhoPlano, args.NomeTag, args.IDEveMensagem)
