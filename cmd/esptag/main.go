@@ -61,9 +61,12 @@ func main() {
 		log.Fatalf("Erro ao registrar MCP de consulta: %v", err)
 	}
 
-	// Adicione esta linha para registrar o novo MCP
 	if err := esptag.RegisterGeraScriptNovaEspecializacao(server, db); err != nil {
 		log.Fatalf("Erro ao registrar MCP de geração de script: %v", err)
+	}
+
+	if err := esptag.RegisterGeraScriptVinculacao(server, db); err != nil {
+		log.Fatalf("Erro ao registrar MCP de geração de script de vinculação: %v", err)
 	}
 
 	// Inicia o servidor
