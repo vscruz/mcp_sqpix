@@ -5,16 +5,12 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
-	"log"
-	"regexp"
-	"strings"
 )
 
 // Helper function to find the target tag, its parent, and a sub-path from XML using proper parsing
 func FindTagParentAndPath(xmlInput string, targetTag string) (parentTag string, subPath []string, err error) {
 	decoder := xml.NewDecoder(bytes.NewReader([]byte(xmlInput)))
-	var stack []string     // Stack to keep track of current path
-	var pathFound []string // Full path to the target tag when found
+	var stack []string // Stack para rastrear o caminho atual
 	found := false
 
 	for {
@@ -23,65 +19,39 @@ func FindTagParentAndPath(xmlInput string, targetTag string) (parentTag string, 
 			break
 		}
 		if tokenErr != nil {
-			// Return XML parsing errors
-			return "", nil, fmt.Errorf("error parsing XML token: %v", tokenErr)
+			return "", nil, fmt.Errorf("erro ao analisar token XML: %v", tokenErr)
 		}
 
 		switch se := token.(type) {
 		case xml.StartElement:
-			// Use Local name to ignore namespace prefixes
+			// Usa o nome Local para ignorar prefixos de namespace
 			tagName := se.Name.Local
-			stack = append(stack, tagName) // Push tag onto stack
+			stack = append(stack, tagName) // Adiciona tag ao stack
 
-			if tagName == targetTag && !found { // Found the target tag for the first time
+			if tagName == targetTag && !found {
 				found = true
-				pathFound = make([]string, len(stack))
-				copy(pathFound, stack) // Store the path to the target
 
+				// Define a tag pai (se existir)
 				if len(stack) > 1 {
-					parentTag = stack[len(stack)-2] // Parent is the second to last element on stack
+					parentTag = stack[len(stack)-2]
 				}
-				// Determine subPath for scoring (e.g., last 3 elements including target)
-				startIdx := len(pathFound) - 3
-				if startIdx < 0 {
-					startIdx = 0
-				}
-				subPath = pathFound[startIdx:]
-				// Continue parsing to check for XML validity / EOF
+
+				// Para o subPath, queremos o caminho completo desde a raiz até a tag alvo
+				// inclusive a própria tag alvo
+				subPath = make([]string, len(stack))
+				copy(subPath, stack)
 			}
+
 		case xml.EndElement:
 			if len(stack) > 0 {
-				stack = stack[:len(stack)-1] // Pop tag from stack
+				stack = stack[:len(stack)-1] // Remove tag do stack
 			}
 		}
 	}
 
 	if !found {
-		return "", nil, fmt.Errorf("target tag '%s' not found in the provided XML", targetTag)
+		return "", nil, fmt.Errorf("tag alvo '%s' não encontrada no XML fornecido", targetTag)
 	}
-
-	// Log the findings from XML parsing
-	log.Printf("DEBUG: XML Parsing - Target: %s, Found Parent: '%s', Found SubPath: %v", targetTag, parentTag, subPath)
 
 	return parentTag, subPath, nil
-}
-
-// ExtrairCaminhoTags extrai o caminho completo de tags do XML (FLAWED, kept temporarily if needed elsewhere)
-func ExtrairCaminhoTags(xml string) []string {
-	xml = strings.ReplaceAll(xml, "\n", "")
-	xml = strings.ReplaceAll(xml, "\t", "")
-	xml = strings.TrimSpace(xml)
-	re := regexp.MustCompile(`<([^/][^>\s]*)[^>]*>`)
-	matches := re.FindAllStringSubmatch(xml, -1)
-	var caminho []string
-	for _, match := range matches {
-		if len(match) > 1 {
-			tag := match[1]
-			if idx := strings.Index(tag, ":"); idx != -1 {
-				tag = tag[idx+1:]
-			}
-			caminho = append(caminho, tag)
-		}
-	}
-	return caminho
 }

@@ -18,12 +18,13 @@ func TestFindTagParentAndPath(t *testing.T) {
 			xmlInput: `<?xml version="1.0"?>
 				<root>
 					<parent>
+						<xpto>value</xpto>
 						<target>value</target>
 					</parent>
 				</root>`,
 			targetTag:   "target",
 			wantParent:  "parent",
-			wantSubPath: []string{"parent", "target"},
+			wantSubPath: []string{"root", "parent", "target"},
 			wantErr:     false,
 		},
 		{
@@ -36,7 +37,7 @@ func TestFindTagParentAndPath(t *testing.T) {
 				</ns:root>`,
 			targetTag:   "target",
 			wantParent:  "parent",
-			wantSubPath: []string{"parent", "target"},
+			wantSubPath: []string{"root", "parent", "target"},
 			wantErr:     false,
 		},
 		{
@@ -80,55 +81,6 @@ func TestFindTagParentAndPath(t *testing.T) {
 							t.Errorf("findTagParentAndPath() subPath[%d] = %v, want %v", i, subPath[i], tt.wantSubPath[i])
 						}
 					}
-				}
-			}
-		})
-	}
-}
-
-func TestExtrairCaminhoTags(t *testing.T) {
-	tests := []struct {
-		name     string
-		xmlInput string
-		want     []string
-	}{
-		{
-			name: "XML simples",
-			xmlInput: `<root>
-				<parent>
-					<child>value</child>
-				</parent>
-			</root>`,
-			want: []string{"root", "parent", "child"},
-		},
-		{
-			name: "XML com namespace",
-			xmlInput: `<ns:root xmlns:ns="http://example.com">
-				<ns:parent>
-					<ns:child>value</ns:child>
-				</ns:parent>
-			</ns:root>`,
-			want: []string{"root", "parent", "child"},
-		},
-		{
-			name:     "XML vazio",
-			xmlInput: "",
-			want:     []string{},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := ExtrairCaminhoTags(tt.xmlInput)
-
-			if len(got) != len(tt.want) {
-				t.Errorf("ExtrairCaminhoTags() length = %v, want %v", len(got), len(tt.want))
-				return
-			}
-
-			for i := range got {
-				if got[i] != tt.want[i] {
-					t.Errorf("ExtrairCaminhoTags()[%d] = %v, want %v", i, got[i], tt.want[i])
 				}
 			}
 		})

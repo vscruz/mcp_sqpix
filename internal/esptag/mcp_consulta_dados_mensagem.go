@@ -36,11 +36,8 @@ func RegisterConsultaDadosMensagem(server *mcp_golang.Server, db *sql.DB) error 
 				return mcp_golang.NewToolResponse(mcp_golang.NewTextContent(fmt.Sprintf("Erro ao processar XML: %v", parseErr))), nil
 			}
 
-			// --- Step 2: Get flat path (for BuscarTagNaBase signature - legacy) ---
-			caminhoPlano := util.ExtrairCaminhoTags(args.CaminhoXML)
-
 			// --- Step 3: Query Database (without parent filter initially) ---
-			resultados, err := BuscarTagNaBase(db, caminhoPlano, args.NomeTag, args.IDEveMensagem)
+			resultados, err := BuscarTagNaBase(db, subcaminhoXML, args.NomeTag, args.IDEveMensagem)
 			if err != nil {
 				return mcp_golang.NewToolResponse(mcp_golang.NewTextContent(fmt.Sprintf("Erro na consulta: %v", err))), nil
 			}
