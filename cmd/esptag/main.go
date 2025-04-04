@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
 	"sq_pix/internal/database"
@@ -63,7 +62,7 @@ func main() {
 	}
 
 	// Inicia o servidor
-	fmt.Println("Iniciando servidor MCP para Especialização de Tags...")
+	log.Println("Iniciando servidor MCP para Especialização de Tags...")
 	if err := server.Serve(); err != nil {
 		log.Fatalf("Erro ao iniciar servidor: %v", err)
 	}
