@@ -13,7 +13,7 @@ type GeraScriptVinculacaoArgs struct {
 	IDEspecializacao int    `json:"id_esp_tag" jsonschema:"required,description=ID da especialização que será vinculada"`
 	IDEveMensagem    string `json:"id_eve_msg" jsonschema:"required,description=ID do evento da mensagem (ex: pain.012)"`
 	IDTag            string `json:"id_tag" jsonschema:"required,description=ID da tag (ex: MndtId)"`
-	IDTagPai         string `json:"id_tag_pai" jsonschema:"description=ID da tag pai (opcional, ex: OrgnlMndt)"`
+	IDTagPai         string `json:"id_tag_pai" jsonschema:"required,description=ID da tag pai (ex: OrgnlMndt)"`
 	NumSeqTag        int    `json:"num_seq_tag" jsonschema:"required,description=Número sequencial da tag"`
 	NumSeqMsgTag     int    `json:"num_seq_msg_tag" jsonschema:"required,description=Número sequencial da mensagem tag"`
 }
