@@ -16,15 +16,17 @@ type GeraScriptSitMsgEmiDesArgs struct {
 	// dat_ult_mnt will be handled by GETDATE() in the script
 }
 
-// VerificarSitMsgEmiDesExistente checks if a record exists in spi_sit_msg_emi_des
-func VerificarSitMsgEmiDesExistente(db *sql.DB, idSitMsgEmiDes string) (bool, error) {
+// VerificarSitMsgEmiDesExistente checks if a record exists in spi_sit_msg_emi_des based on the composite key
+func VerificarSitMsgEmiDesExistente(db *sql.DB, idSitMsgEmiDes string, idTipEmiDes int, idSitMsg int) (bool, error) {
 	query := `
 		SELECT 1 
 		FROM spi_sit_msg_emi_des 
-		WHERE id_sit_msg_emi_des = ?
+		WHERE id_sit_msg_emi_des = ? 
+		  AND id_tip_emi_des = ? 
+		  AND id_sit_msg = ?
 	`
 	var existe int
-	err := db.QueryRow(query, idSitMsgEmiDes).Scan(&existe)
+	err := db.QueryRow(query, idSitMsgEmiDes, idTipEmiDes, idSitMsg).Scan(&existe)
 
 	if err == sql.ErrNoRows {
 		return false, nil // Not found
@@ -53,7 +55,9 @@ func GeraScriptSitMsgEmiDes(args GeraScriptSitMsgEmiDesArgs) string {
 	script.WriteString(fmt.Sprintf("-- ID Situação Mensagem: %d\n", args.IDSitMsg))
 	script.WriteString(fmt.Sprintf("-- Descrição: %s\n\n", args.DscSitMsgEmiDes))
 
-	script.WriteString(fmt.Sprintf("IF NOT EXISTS (SELECT 1 FROM spi_sit_msg_emi_des WHERE id_sit_msg_emi_des = '%s')\nBEGIN\n", escapedIDSitMsgEmiDes))
+	// Updated IF NOT EXISTS to include all key fields
+	script.WriteString(fmt.Sprintf("IF NOT EXISTS (SELECT 1 FROM spi_sit_msg_emi_des WHERE id_sit_msg_emi_des = '%s' AND id_tip_emi_des = %d AND id_sit_msg = %d)\nBEGIN\n",
+		escapedIDSitMsgEmiDes, args.IDTipEmiDes, args.IDSitMsg))
 
 	script.WriteString("  INSERT INTO spi_sit_msg_emi_des (id_sit_msg_emi_des, id_tip_emi_des, id_sit_msg, dsc_sit_msg_emi_des, cod_usu_ult_mnt, dat_ult_mnt)\n")
 	script.WriteString(fmt.Sprintf("  VALUES ('%s', %d, %d, '%s', %d, GETDATE())\n",

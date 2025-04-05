@@ -29,7 +29,7 @@ func RegisterGeraScriptSitMsgEmiDes(server *mcp_golang.Server, db *sql.DB) error
 			}
 
 			// --- Check if record already exists ---
-			existe, err := VerificarSitMsgEmiDesExistente(db, args.IDSitMsgEmiDes)
+			existe, err := VerificarSitMsgEmiDesExistente(db, args.IDSitMsgEmiDes, args.IDTipEmiDes, args.IDSitMsg)
 			if err != nil {
 				// Return internal error if DB check fails
 				return nil, fmt.Errorf("erro ao verificar existência do registro: %v", err)
