@@ -73,6 +73,10 @@ func main() {
 		log.Fatalf("Erro ao registrar MCP de consulta de dados da mensagem: %v", err)
 	}
 
+	if err := esptag.RegisterGeraScriptSitMsgEmiDes(server, db); err != nil {
+		log.Fatalf("Erro ao registrar MCP de geração de script spi_sit_msg_emi_des: %v", err)
+	}
+
 	// Inicia o servidor
 	log.Println("Iniciando servidor MCP para Especialização de Tags...")
 	if err := server.Serve(); err != nil {

@@ -81,16 +81,15 @@ O servidor requer acesso ao banco de dados SQL Server do PIX. As credenciais pod
 ```json
 {
   "mcpServers": {
-    "sq-pix-esptag": {
-      "command": "F:/src/sinqia/sqpix/mcp/sq_pix/bin/sq_pix_esptag.exe",
+    "sqpix": {
+      "command": "sqpix",
       "args": [
-        "-server", "SEU_SERVIDOR_SQL",
-        "-user", "SEU_USUARIO_SQL",
-        "-password", "SUA_SENHA_SQL",
-        "-database", "SEU_BANCO_PIX"
+        "-server", "10.110.104.4",
+        "-user", "sa",
+        "-password", "P@ssw0rd",
+        "-database", "DSV_PIX"
       ],
-      "disabled": false,
-      "autoApprove": []
+      "env": {} 
     }
   }
 }
